@@ -2,7 +2,7 @@ This project exists to remind me to how to deal with SOAP from Java, specificall
 
 Just so I can remember how awesome SOAP is.
 
-To use the Pingdom SOAP API, just clone this repo, take dist/pingdom-soap-api-1.0.jar, lib/axis-1.4.jar, and lib/jaxrpc-1.4.jar.  The former has the codegen'd SOAP API classes, and the latter have supporting classes.  The javadoc is generated in the doc/ folder.  To recompile at any time, just run "./clean.sh && ./build.sh" and it will re-codegen, compile, generate javadoc, and generate the jar.
+To use the Pingdom SOAP API, just clone this repo, take dist/pingdom-soap-api-1.0.jar, and take axis-1.4.jar, jaxrpc-1.4.jar, commons-discovery-0.2.jar, and wsdl4j-1.5.1.jar from the lib directory.  The former has the codegen'd SOAP API classes, and the latter have supporting classes.  The javadoc is generated in the doc/ folder.  To recompile at any time, just run "./clean.sh && ./build.sh" and it will re-codegen, compile, generate javadoc, and generate the jar.
 
 The steps to getting here with another WSDL file would be:
 

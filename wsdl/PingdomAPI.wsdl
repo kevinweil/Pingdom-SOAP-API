@@ -1,0 +1,892 @@
+<?xml version ='1.0' encoding ='UTF-8' ?>
+<definitions name='PingdomAPI'
+  targetNamespace='https://ws.pingdom.com/soap/'
+  xmlns:tns='https://ws.pingdom.com/soap/'
+  xmlns:typens='urn:PingdomAPI'
+  xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/'
+  xmlns:xsd='http://www.w3.org/2001/XMLSchema'
+  xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/'
+  xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/'
+  xmlns='http://schemas.xmlsoap.org/wsdl/'>
+
+	<types>
+		<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:PingdomAPI">
+
+			<xsd:complexType name="Test_EchoResponse">
+				<xsd:all>
+					<xsd:element name="status" type="xsd:int"/>
+					<xsd:element name="outString" type="xsd:string"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Auth_CredentialsData">
+				<xsd:all>
+					<xsd:element name="username" type="xsd:string"/>
+					<xsd:element name="password" type="xsd:string"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Auth_LoginResponse">
+				<xsd:all>
+					<xsd:element name="status" type="xsd:int"/>
+					<xsd:element name="sessionId" type="xsd:string"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Auth_LogoutResponse">
+				<xsd:all>
+					<xsd:element name="status" type="xsd:int"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Check_GetListResponse">
+				<xsd:all>
+					<xsd:element name="status" type="xsd:int"/>
+					<xsd:element name="checkNames" type="typens:Check_ListArray"/>
+				</xsd:all>
+			</xsd:complexType>
+			
+			<xsd:complexType name="Check_ListArray">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="xsd:string[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="Check_GetCheckIdsByNamesRequest">
+				<xsd:all>
+					<xsd:element name="checkNames" type="typens:Check_ListArray"/>
+				</xsd:all>
+			</xsd:complexType>
+			
+			<xsd:complexType name="Check_GetCheckIdsByNamesResponse">
+				<xsd:all>
+					<xsd:element name="status" type="xsd:int"/>
+					<xsd:element name="checkIds" type="typens:Check_CheckIdsArray"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Check_GetCheckURLRequest">
+				<xsd:all>
+					<xsd:element name="checkName" type="xsd:string"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Check_GetCheckURLResponse">
+				<xsd:all>
+					<xsd:element name="status" type="xsd:int"/>
+					<xsd:element name="url" type="xsd:string"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Check_CheckIdsArray">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="xsd:int[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_GetLastDownsResponse">
+				<xsd:all>
+					<xsd:element name="status" type="xsd:int"/>
+					<xsd:element name="lastDowns" type="typens:Report_LastDownsArray"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_LastDownsArray">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:Report_LastDownEntry[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_LastDownEntry">
+				<xsd:all>
+					<xsd:element name="checkName" type="xsd:string"/>
+					<xsd:element name="lastDown" type="xsd:dateTime"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_GetCurrentStatesResponse">
+				<xsd:all>
+					<xsd:element name="status" type="xsd:int"/>
+					<xsd:element name="currentStates" type="typens:Report_CurrentStatesArray"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_CurrentStatesArray">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:Report_CheckStateEntry[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_CheckStateEntry">
+				<xsd:all>
+					<xsd:element name="checkName" type="xsd:string"/>
+					<xsd:element name="checkState" type="typens:Report_CheckState"/>
+					<xsd:element name="lastCheckTime" type="xsd:dateTime"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:simpleType name="Report_CheckState">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="CHECK_UP"/>
+					<xsd:enumeration value="CHECK_DOWN"/>
+					<xsd:enumeration value="CHECK_UNKNOWN"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:complexType name="Report_GetDowntimesRequest">
+				<xsd:all>
+					<xsd:element name="from" type="xsd:dateTime"/>
+					<xsd:element name="to" type="xsd:dateTime"/>
+					<xsd:element name="resolution" type="typens:Report_ResolutionEnum"/>
+					<xsd:element name="checkName" type="xsd:string"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_GetResponseTimesRequest">
+				<xsd:all>
+					<xsd:element name="from" type="xsd:dateTime"/>
+					<xsd:element name="to" type="xsd:dateTime"/>
+					<xsd:element name="resolution" type="typens:Report_ResolutionEnum"/>
+					<xsd:element name="checkName" type="xsd:string"/>
+					<xsd:element name="locations" type="typens:Location_ListArray"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_GetNotificationsRequest">
+				<xsd:all>
+					<xsd:element name="checkNames" type="typens:Report_checkNamesArray"/>
+					<xsd:element name="contacts" type="typens:Report_contactsArray"/>
+					<xsd:element name="from" type="xsd:dateTime"/>
+					<xsd:element name="to" type="xsd:dateTime"/>
+					<xsd:element name="status" type="typens:Report_NotificationStatus"/>
+					<xsd:element name="via" type="typens:Report_NotificationVia"/>
+					<xsd:element name="pageNumber" type="xsd:int"/>
+					<xsd:element name="resultsPerPage" type="xsd:int"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_checkNamesArray">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="xsd:string[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_contactsArray">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="xsd:string[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:simpleType name="Report_NotificationStatusItem">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="SENT"/>
+					<xsd:enumeration value="DELIVERED"/>
+					<xsd:enumeration value="NOT_DELIVERED"/>
+					<xsd:enumeration value="NO_CREDITS"/>
+					<xsd:enumeration value="ERROR"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:complexType name="Report_NotificationStatus">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:Report_NotificationStatusItem[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:simpleType name="Report_NotificationViaItem">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="EMAIL"/>
+					<xsd:enumeration value="SMS"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:complexType name="Report_NotificationVia">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:Report_NotificationViaItem[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_GetOutagesRequest">
+				<xsd:all>
+					<xsd:element name="from" type="xsd:dateTime"/>
+					<xsd:element name="to" type="xsd:dateTime"/>
+					<xsd:element name="checkName" type="xsd:string"/>
+					<xsd:element name="pageNumber" type="xsd:int"/>
+					<xsd:element name="resultsPerPage" type="xsd:int"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_GetRawDataRequest">
+				<xsd:all>
+					<xsd:element name="from" type="xsd:dateTime"/>
+					<xsd:element name="to" type="xsd:dateTime"/>
+					<xsd:element name="checkName" type="xsd:string"/>
+					<xsd:element name="pageNumber" type="xsd:int"/>
+					<xsd:element name="resultsPerPage" type="xsd:int"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:simpleType name="Report_ResolutionEnum">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="DAILY"/>
+					<xsd:enumeration value="WEEKLY"/>
+					<xsd:enumeration value="MONTHLY"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:complexType name="Report_GetDowntimesResponse">
+				<xsd:all>
+					<xsd:element name="status" type="xsd:int"/>
+					<xsd:element name="downtimesArray" type="typens:Report_DowntimesArray"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_DowntimesArray">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:Report_DowntimeEntry[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_DowntimeEntry">
+				<xsd:all>
+					<xsd:element name="from" type="xsd:dateTime"/>
+					<xsd:element name="to" type="xsd:dateTime"/>
+					<xsd:element name="duration" type="xsd:int"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_GetDowntimesExtendedResponse">
+				<xsd:all>
+					<xsd:element name="status" type="xsd:int"/>
+					<xsd:element name="downtimesArray" type="typens:Report_DowntimesExtendedArray"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_DowntimesExtendedArray">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:Report_DowntimeExtendedEntry[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_DowntimeExtendedEntry">
+				<xsd:all>
+					<xsd:element name="from" type="xsd:dateTime"/>
+					<xsd:element name="to" type="xsd:dateTime"/>
+					<xsd:element name="total_time" type="xsd:int"/>
+					<xsd:element name="downtimes_duration" type="xsd:int"/>
+					<xsd:element name="unknown_duration" type="xsd:int"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_GetOutagesResponse">
+				<xsd:all>
+					<xsd:element name="status" type="xsd:int"/>
+					<xsd:element name="outagesArray" type="typens:Report_OutagesArray"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_OutagesArray">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:Report_OutageEntry[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_OutageEntry">
+				<xsd:all>
+					<xsd:element name="from" type="xsd:dateTime"/>
+					<xsd:element name="to" type="xsd:dateTime"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Location_ListArray">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="xsd:string[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_ResponseTimesArray">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:Report_ResponseTimeEntry[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_ResponseTimeEntry">
+				<xsd:all>
+					<xsd:element name="from" type="xsd:dateTime"/>
+					<xsd:element name="to" type="xsd:dateTime"/>
+					<xsd:element name="responseTime" type="xsd:float"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_GetNotificationsResponseArray">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:Report_GetNotificationsResponseItem[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_GetNotificationsResponseItem">
+				<xsd:all>
+					<xsd:element name="notificationTime" type="xsd:dateTime"/>
+					<xsd:element name="check" type="xsd:string"/>
+					<xsd:element name="contact" type="xsd:string"/>
+					<xsd:element name="sentTo" type="xsd:string"/>
+					<xsd:element name="messageType" type="xsd:string"/>
+					<xsd:element name="messageStatus" type="xsd:string"/>
+					<xsd:element name="cause" type="xsd:string"/>
+					<xsd:element name="message" type="xsd:string"/>
+					<xsd:element name="charged" type="xsd:boolean"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_GetRawDataResponse">
+				<xsd:all>
+					<xsd:element name="status" type="xsd:int"/>
+					<xsd:element name="rawDataArray" type="typens:Report_RawDataArray"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_RawDataArray">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:Report_RawDataEntry[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_RawDataEntry">
+				<xsd:all>
+					<xsd:element name="checkTime" type="xsd:dateTime"/>
+					<xsd:element name="checkState" type="typens:Report_CheckState"/>
+					<xsd:element name="responseTime" type="xsd:float"/>
+					<xsd:element name="location" type="xsd:string"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Location_GetListResponse">
+				<xsd:all>
+					<xsd:element name="status" type="xsd:int"/>
+					<xsd:element name="locationsArray" type="typens:Location_ListArray"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_GetResponseTimesResponse">
+				<xsd:all>
+					<xsd:element name="status" type="xsd:int"/>
+					<xsd:element name="responseTimesArray" type="typens:Report_ResponseTimesArray"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Report_GetNotificationsResponse">
+				<xsd:all>
+					<xsd:element name="status" type="xsd:int"/>
+					<xsd:element name="getNotificationsResponseArray" type="typens:Report_GetNotificationsResponseArray"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="AccountData">
+				<xsd:all>
+					<xsd:element name='email' type='xsd:string'/>
+					<xsd:element name='firstName' type='xsd:string'/>
+					<xsd:element name='lastName' type='xsd:string'/>
+					<xsd:element name='company' type='xsd:string'/>
+					<xsd:element name='phoneCodeCountry' type='xsd:string'/>
+					<xsd:element name='phoneNumber' type='xsd:string'/>
+					<xsd:element name='cellPhoneCodeCountry' type='xsd:string'/>
+					<xsd:element name='cellPhoneNumber' type='xsd:string'/>
+					<xsd:element name='address' type='xsd:string'/>
+					<xsd:element name='addressTwo' type='xsd:string'/>
+					<xsd:element name='zip' type='xsd:string'/>
+					<xsd:element name='city' type='xsd:string'/>
+					<xsd:element name='state' type='xsd:string'/>
+					<xsd:element name='countryISO' type='xsd:string'/>
+				</xsd:all>
+			</xsd:complexType>
+			
+			<xsd:simpleType name="AccountType">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="TRIAL"/>
+					<xsd:enumeration value="BASIC_MONTHLY"/>
+					<xsd:enumeration value="BASIC_YEARLY"/>
+					<xsd:enumeration value="FREE"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:complexType name="CreateAccountResponse">
+				<xsd:all>
+					<xsd:element name="status" type="xsd:int"/>
+					<xsd:element name="password" type="xsd:string"/>
+				</xsd:all>
+			</xsd:complexType>
+
+		</xsd:schema>
+	</types>
+
+	<message name='echo_input'>
+		<part name='inString' type='xsd:string'/>
+	</message>
+
+	<message name='echo_response'>
+		<part name='return' type='typens:Test_EchoResponse'/>
+	</message>
+
+	<message name='login_input'>
+		<part name='APIKey' type='xsd:string'/>
+		<part name='credentialsData' type='typens:Auth_CredentialsData'/>
+	</message>
+
+	<message name='login_response'>
+		<part name='return' type='typens:Auth_LoginResponse'/>
+	</message>
+
+	<message name='logout_input'>
+		<part name='APIKey' type='xsd:string'/>
+		<part name='sessionId' type='xsd:string'/>
+	</message>
+
+	<message name='logout_response'>
+		<part name='return' type='typens:Auth_LogoutResponse'/>
+	</message>
+
+	<message name='get_check_names_input'>
+		<part name='APIKey' type='xsd:string'/>
+		<part name='sessionId' type='xsd:string'/>
+	</message>
+
+	<message name='get_check_names_response'>
+		<part name='return' type='typens:Check_GetListResponse'/>
+	</message>
+	
+	<message name='get_check_ids_by_names_input'>
+		<part name='APIKey' type='xsd:string'/>
+		<part name='sessionId' type='xsd:string'/>
+		<part name='getCheckIdsByNamesRequest' type='typens:Check_GetCheckIdsByNamesRequest'/>
+	</message>
+
+	<message name='get_check_ids_by_names_response'>
+		<part name='return' type='typens:Check_GetCheckIdsByNamesResponse'/>
+	</message>
+	
+	<message name='get_check_url_input'>
+		<part name='APIKey' type='xsd:string'/>
+		<part name='sessionId' type='xsd:string'/>
+		<part name='getCheckURLRequest' type='typens:Check_GetCheckURLRequest'/>
+	</message>
+
+	<message name='get_check_url_response'>
+		<part name='return' type='typens:Check_GetCheckURLResponse'/>
+	</message>
+
+	<message name='get_last_downs_input'>
+		<part name='APIKey' type='xsd:string'/>
+		<part name='sessionId' type='xsd:string'/>
+	</message>
+
+	<message name='get_last_downs_response'>
+		<part name='return' type='typens:Report_GetLastDownsResponse'/>
+	</message>
+
+	<message name='get_current_states_input'>
+		<part name='APIKey' type='xsd:string'/>
+		<part name='sessionId' type='xsd:string'/>
+	</message>
+
+	<message name='get_current_states_response'>
+		<part name='return' type='typens:Report_GetCurrentStatesResponse'/>
+	</message>
+
+	<message name='get_downtimes_input'>
+		<part name='APIKey' type='xsd:string'/>
+		<part name='sessionId' type='xsd:string'/>
+		<part name='getDowntimesRequest' type='typens:Report_GetDowntimesRequest'/>
+	</message>
+
+	<message name='get_downtimes_response'>
+		<part name='return' type='typens:Report_GetDowntimesResponse'/>
+	</message>
+
+	<message name='get_downtimes_extended_input'>
+		<part name='APIKey' type='xsd:string'/>
+		<part name='sessionId' type='xsd:string'/>
+		<part name='getDowntimesRequest' type='typens:Report_GetDowntimesRequest'/>
+	</message>
+
+	<message name='get_downtimes_extended_response'>
+		<part name='return' type='typens:Report_GetDowntimesExtendedResponse'/>
+	</message>
+
+	<message name='get_outages_input'>
+		<part name='APIKey' type='xsd:string'/>
+		<part name='sessionId' type='xsd:string'/>
+		<part name='getOutagesRequest' type='typens:Report_GetOutagesRequest'/>
+	</message>
+
+	<message name='get_outages_response'>
+		<part name='return' type='typens:Report_GetOutagesResponse'/>
+	</message>
+
+	<message name='get_raw_data_input'>
+		<part name='APIKey' type='xsd:string'/>
+		<part name='sessionId' type='xsd:string'/>
+		<part name='getRawDataRequest' type='typens:Report_GetRawDataRequest'/>
+	</message>
+
+	<message name='get_raw_data_response'>
+		<part name='return' type='typens:Report_GetRawDataResponse'/>
+	</message>
+
+	<message name='get_locations_input'>
+		<part name='APIKey' type='xsd:string'/>
+		<part name='sessionId' type='xsd:string'/>
+	</message>
+
+	<message name='get_locations_response'>
+		<part name='return' type='typens:Location_GetListResponse'/>
+	</message>
+
+	<message name='get_response_times_input'>
+		<part name='APIKey' type='xsd:string'/>
+		<part name='sessionId' type='xsd:string'/>
+		<part name='getResponseTimesRequest' type='typens:Report_GetResponseTimesRequest'/>
+	</message>
+
+	<message name='get_response_times_response'>
+		<part name='return' type='typens:Report_GetResponseTimesResponse'/>
+	</message>
+
+	<message name='get_notifications_input'>
+		<part name='APIKey' type='xsd:string'/>
+		<part name='sessionId' type='xsd:string'/>
+		<part name='getNotificationsRequest' type='typens:Report_GetNotificationsRequest'/>
+	</message>
+
+	<message name='get_notifications_response'>
+		<part name='return' type='typens:Report_GetNotificationsResponse'/>
+	</message>
+
+	<message name='create_account_input'>
+		<part name='APIKey' type='xsd:string'/>
+		<part name='accountData' type='typens:AccountData'/>
+		<part name='accountType' type='typens:AccountType'/>
+		<part name='url' type='xsd:string'/>
+	</message>
+
+	<message name='create_account_response'>
+		<part name='return' type='typens:CreateAccountResponse'/>
+	</message>
+
+	<portType name='PingdomAPISoapPort'>
+
+		<operation name='Test_echo'>
+			<input message='tns:echo_input'/>
+			<output message='tns:echo_response'/>
+		</operation>
+
+		<operation name='Auth_login'>
+			<input message='tns:login_input'/>
+			<output message='tns:login_response'/>
+		</operation>
+
+		<operation name='Auth_logout'>
+			<input message='tns:logout_input'/>
+			<output message='tns:logout_response'/>
+		</operation>
+
+		<operation name='Check_getList'>
+			<input message='tns:get_check_names_input'/>
+			<output message='tns:get_check_names_response'/>
+		</operation>
+		
+		<operation name='Check_getCheckIdsByNames'>
+			<input message='tns:get_check_ids_by_names_input'/>
+			<output message='tns:get_check_ids_by_names_response'/>
+		</operation>
+
+		<operation name='Check_getCheckURL'>
+			<input message='tns:get_check_url_input'/>
+			<output message='tns:get_check_url_response'/>
+		</operation>
+
+		<operation name='Report_getLastDowns'>
+			<input message='tns:get_last_downs_input'/>
+			<output message='tns:get_last_downs_response'/>
+		</operation>
+
+		<operation name='Report_getCurrentStates'>
+			<input message='tns:get_current_states_input'/>
+			<output message='tns:get_current_states_response'/>
+		</operation>
+
+		<operation name='Report_getDowntimes'>
+			<input message='tns:get_downtimes_input'/>
+			<output message='tns:get_downtimes_response'/>
+		</operation>
+
+		<operation name='Report_getDowntimesExtended'>
+			<input message='tns:get_downtimes_extended_input'/>
+			<output message='tns:get_downtimes_extended_response'/>
+		</operation>
+
+		<operation name='Report_getOutages'>
+			<input message='tns:get_outages_input'/>
+			<output message='tns:get_outages_response'/>
+		</operation>
+
+		<operation name='Report_getRawData'>
+			<input message='tns:get_raw_data_input'/>
+			<output message='tns:get_raw_data_response'/>
+		</operation>
+
+		<operation name='Location_getList'>
+			<input message='tns:get_locations_input'/>
+			<output message='tns:get_locations_response'/>
+		</operation>
+
+		<operation name='Report_getResponseTimes'>
+			<input message='tns:get_response_times_input'/>
+			<output message='tns:get_response_times_response'/>
+		</operation>
+
+		<operation name='Report_getNotifications'>
+			<input message='tns:get_notifications_input'/>
+			<output message='tns:get_notifications_response'/>
+		</operation>
+
+		<operation name='createAccount'>
+			<input message='tns:create_account_input'/>
+			<output message='tns:create_account_response'/>
+		</operation>
+
+	</portType>
+
+	<binding name='PingdomAPISoapBinding' type='tns:PingdomAPISoapPort'>
+		<soap:binding style='rpc' transport='http://schemas.xmlsoap.org/soap/http'/>
+
+		<operation name='Test_echo'>
+			<soap:operation soapAction='urn:methods#Test_echo'/>
+			<input>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</input>
+			<output>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</output>
+		</operation>
+
+		<operation name='Auth_login'>
+			<soap:operation soapAction='urn:methods#Auth_login'/>
+			<input>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</input>
+			<output>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</output>
+		</operation>
+
+		<operation name='Auth_logout'>
+			<soap:operation soapAction='urn:methods#Auth_logout'/>
+			<input>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</input>
+			<output>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</output>
+		</operation>
+
+		<operation name='Check_getList'>
+			<soap:operation soapAction='urn:methods#Check_getList'/>
+			<input>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</input>
+			<output>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</output>
+		</operation>
+
+		<operation name='Check_getCheckIdsByNames'>
+			<soap:operation soapAction='urn:methods#Check_getCheckIdsByNames'/>
+			<input>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</input>
+			<output>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</output>
+		</operation>
+
+		<operation name='Check_getCheckURL'>
+			<soap:operation soapAction='urn:methods#Check_getCheckURL'/>
+			<input>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</input>
+			<output>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</output>
+		</operation>
+
+		<operation name='Report_getLastDowns'>
+			<soap:operation soapAction='urn:methods#Report_getLastDowns'/>
+			<input>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</input>
+			<output>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</output>
+		</operation>
+
+		<operation name='Report_getCurrentStates'>
+			<soap:operation soapAction='urn:methods#Report_getCurrentStates'/>
+			<input>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</input>
+			<output>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</output>
+		</operation>
+
+		<operation name='Report_getDowntimes'>
+			<soap:operation soapAction='urn:methods#Report_getDowntimes'/>
+			<input>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</input>
+			<output>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</output>
+		</operation>
+
+		<operation name='Report_getDowntimesExtended'>
+			<soap:operation soapAction='urn:methods#Report_getDowntimesExtended'/>
+			<input>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</input>
+			<output>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</output>
+		</operation>
+
+		<operation name='Report_getOutages'>
+			<soap:operation soapAction='urn:methods#Report_getOutages'/>
+			<input>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</input>
+			<output>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</output>
+		</operation>
+
+		<operation name='Report_getRawData'>
+			<soap:operation soapAction='urn:methods#Report_getRawData'/>
+			<input>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</input>
+			<output>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</output>
+		</operation>
+
+		<operation name='Location_getList'>
+			<soap:operation soapAction='urn:methods#Location_getList'/>
+			<input>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</input>
+			<output>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</output>
+		</operation>
+
+		<operation name='Report_getResponseTimes'>
+			<soap:operation soapAction='urn:methods#Report_getResponseTimes'/>
+			<input>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</input>
+			<output>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</output>
+		</operation>
+
+		<operation name='Report_getNotifications'>
+			<soap:operation soapAction='urn:methods#Report_getNotifications'/>
+			<input>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</input>
+			<output>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</output>
+		</operation>
+
+		<operation name='createAccount'>
+			<soap:operation soapAction='urn:methods#createAccount'/>
+			<input>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</input>
+			<output>
+				<soap:body use='encoded' namespace='urn:methods'
+				encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+			</output>
+		</operation>
+
+	</binding>
+
+	<service name='PingdomAPI'>
+		<port name='PingdomAPISoapPort' binding='tns:PingdomAPISoapBinding'>
+			<soap:address location='https://ws.pingdom.com/soap/'/>
+		</port>
+	</service>
+
+</definitions>
